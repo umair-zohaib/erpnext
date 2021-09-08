@@ -129,20 +129,6 @@ def add_standard_navbar_items():
 	navbar_settings = frappe.get_single("Navbar Settings")
 	navbar_settings.set('logo_width', 50)
 
-	current_navbar_items = navbar_settings.help_dropdown
-	navbar_settings.set('help_dropdown', [])
-
-	for item in current_navbar_items:
-		if item.item_label == 'Keyboard Shortcuts':
-			navbar_settings.append('help_dropdown', {
-				'item_label': item.item_label,
-				'item_type': item.item_type,
-				'route': item.route,
-				'action': item.action,
-				'is_standard': item.is_standard,
-				'hidden': item.hidden
-			})
-
 	navbar_settings.save()
 	
 	make_property_setter("Navbar Settings", "help_dropdown", "hidden", 1, "Check")

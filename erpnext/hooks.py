@@ -630,8 +630,3 @@ global_search_doctypes = {
 additional_timeline_content = {
 	'*': ['erpnext.telephony.doctype.call_log.call_log.get_linked_call_logs']
 }
-
-from frappe.frappe.core.doctype.navbar_settings.navbar_settings import NavbarSettings
-def navbar_validate_override(self):
-	pass
-NavbarSettings.validate = navbar_validate_override()
