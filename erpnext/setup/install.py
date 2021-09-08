@@ -13,6 +13,8 @@ from frappe.desk.page.setup_wizard.setup_wizard import add_all_roles_to
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from erpnext.setup.default_energy_point_rules import get_default_energy_point_rules
 from six import iteritems
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
 
 default_mail_footer = """<div style="padding: 7px; text-align: right; color: #888"><small>Sent via
 	<a style="color: #888" href="http://erpnext.org">ERPNext</a></div>"""
@@ -33,6 +35,7 @@ def after_install():
 	add_app_name()
 	add_non_standard_user_types()
 	delete_not_required_workspaces_for_sherp()
+	add_website_settings()
 	frappe.db.commit()
 
 
@@ -124,47 +127,12 @@ def add_company_to_session_defaults():
 
 def add_standard_navbar_items():
 	navbar_settings = frappe.get_single("Navbar Settings")
+	navbar_settings.set('logo_width', 50)
 
-	erpnext_navbar_items = [
-		{
-			'item_label': 'Documentation',
-			'item_type': 'Route',
-			'route': 'https://erpnext.com/docs/user/manual',
-			'is_standard': 1
-		},
-		{
-			'item_label': 'User Forum',
-			'item_type': 'Route',
-			'route': 'https://discuss.erpnext.com',
-			'is_standard': 1
-		},
-		{
-			'item_label': 'Report an Issue',
-			'item_type': 'Route',
-			'route': 'https://github.com/frappe/erpnext/issues',
-			'is_standard': 1
-		}
-	]
-
-	current_navbar_items = navbar_settings.help_dropdown
-	navbar_settings.set('help_dropdown', [])
-
-	for item in erpnext_navbar_items:
-		current_labels = [item.get('item_label') for item in current_navbar_items]
-		if not item.get('item_label') in current_labels:
-			navbar_settings.append('help_dropdown', item)
-
-	for item in current_navbar_items:
-		navbar_settings.append('help_dropdown', {
-			'item_label': item.item_label,
-			'item_type': item.item_type,
-			'route': item.route,
-			'action': item.action,
-			'is_standard': item.is_standard,
-			'hidden': item.hidden
-		})
-
+	
 	navbar_settings.save()
+	
+	make_property_setter("Navbar Settings", "help_dropdown", "hidden", 1, "Check")
 
 def add_app_name():
 	frappe.db.set_value('System Settings', None, 'app_name', 'shERP')
@@ -251,3 +219,8 @@ def delete_not_required_workspaces_for_sherp():
 	workspaces = frappe.get_list('Workspace',  filters=[['name', 'not in', ['HR', 'Users', 'Settings']]])
 	for workspace in workspaces:
 		frappe.delete_doc('Workspace', workspace['name'])
+
+def add_website_settings():
+	website_settings = frappe.get_single("Website Settings")
+	website_settings.set('home_page', 'login')
+	website_settings.save()
