@@ -32,6 +32,7 @@ def after_install():
 	add_standard_navbar_items()
 	add_app_name()
 	add_non_standard_user_types()
+	delete_not_required_workspaces_for_sherp()
 	frappe.db.commit()
 
 
@@ -166,7 +167,7 @@ def add_standard_navbar_items():
 	navbar_settings.save()
 
 def add_app_name():
-	frappe.db.set_value('System Settings', None, 'app_name', 'ERPNext')
+	frappe.db.set_value('System Settings', None, 'app_name', 'shERP')
 
 def add_non_standard_user_types():
 	user_types = get_user_types_data()
@@ -245,3 +246,8 @@ def update_select_perm_after_install():
 		doc.save()
 
 	frappe.flags.update_select_perm_after_migrate = False
+
+def delete_not_required_workspaces_for_sherp():
+	workspaces = frappe.get_list('Workspace',  filters=[['name', 'not in', ['HR', 'Users', 'Settings']]])
+	for workspace in workspaces:
+		frappe.delete_doc('Workspace', workspace['name'])

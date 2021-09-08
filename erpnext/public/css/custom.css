@@ -12,3 +12,23 @@
     background-color: #3B81C4;
     border-color:#3B81C4;
 }
+
+.app-logo {
+    width: auto;
+}
+
+.search-bar {
+    visibility: hidden; 
+}
+
+.navbar-light .navbar-brand {
+    visibility: hidden; 
+}
+
+.nav-item .dropdown .dropdown-help {
+    visibility: hidden; 
+}
+
+.nav-item .dropdown .dropdown-notifications {
+    visibility: hidden; 
+}
