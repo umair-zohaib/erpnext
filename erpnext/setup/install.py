@@ -236,4 +236,14 @@ def delete_not_required_workspaces_for_sherp():
 def add_website_settings():
 	website_settings = frappe.get_single("Website Settings")
 	website_settings.set('home_page', 'login')
+
+	curr_top_bar_items = website_settings.top_bar_items
+	website_settings.set('top_bar_items', [])
+
+	new_top_bar_items = []
+	for top_bar_item in curr_top_bar_items:
+		if top_bar_item.label != 'Products':
+			new_top_bar_items.append(top_bar_item)
+	
+	website_settings.set('top_bar_items', new_top_bar_items)
 	website_settings.save()
