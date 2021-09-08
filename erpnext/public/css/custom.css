@@ -25,10 +25,6 @@
     visibility: hidden; 
 }
 
-.nav-item .dropdown .dropdown-help {
-    visibility: hidden; 
-}
-
-.nav-item .dropdown .dropdown-notifications {
+.dropdown-help {
     visibility: hidden; 
 }
